@@ -1,4 +1,5 @@
 import { CameraView, useCameraPermissions } from 'expo-camera';
+import * as Haptics from 'expo-haptics';
 import { useIsFocused, useRouter } from 'expo-router';
 import { SymbolView } from 'expo-symbols';
 import { useRef, useState } from 'react';
@@ -10,7 +11,7 @@ import { ErrorState } from '@/src/components/ErrorState';
 import { LoadingOverlay } from '@/src/components/LoadingOverlay';
 import { getDraft, setScan } from '@/src/lib/session';
 import { compressPhoto } from '@/src/lib/photos';
-import { colors, spacing } from '@/src/theme';
+import { colors, fontSizes, fontWeights, radius, spacing } from '@/src/theme';
 
 const MAX_PHOTOS = 3;
 
@@ -44,6 +45,8 @@ export default function CaptureScreen() {
   async function takePhoto() {
     if (!camera.current || isTaking || photos.length >= MAX_PHOTOS) return;
     retry.current = takePhoto;
+    // Haptics are a nicety, so a device without them must not block the photo.
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch(() => {});
     setIsTaking(true);
     setError(null);
     try {
@@ -164,15 +167,15 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginTop: spacing.sm,
     padding: spacing.md,
-    borderRadius: 12,
+    borderRadius: radius.lg,
     backgroundColor: colors.background,
   },
   resumeLabel: {
-    fontWeight: '600',
+    fontWeight: fontWeights.medium,
     color: colors.text,
   },
   errorCard: {
-    borderRadius: 12,
+    borderRadius: radius.lg,
     backgroundColor: colors.background,
   },
   thumbnails: {
@@ -183,7 +186,7 @@ const styles = StyleSheet.create({
   thumbnail: {
     width: 64,
     height: 64,
-    borderRadius: 8,
+    borderRadius: radius.sm,
     borderWidth: 2,
     borderColor: colors.background,
   },
@@ -191,8 +194,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 2,
     right: 6,
-    fontSize: 18,
-    fontWeight: '700',
+    fontSize: fontSizes.heading,
+    fontWeight: fontWeights.bold,
     color: colors.background,
   },
   actions: {
@@ -203,7 +206,7 @@ const styles = StyleSheet.create({
   },
   count: {
     width: 110,
-    fontWeight: '600',
+    fontWeight: fontWeights.medium,
     color: colors.background,
   },
   shutter: {
@@ -223,7 +226,7 @@ const styles = StyleSheet.create({
     width: 110,
     alignItems: 'center',
     paddingVertical: 12,
-    borderRadius: 10,
+    borderRadius: radius.md,
     backgroundColor: colors.primary,
   },
   disabled: {
@@ -237,8 +240,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
   },
   permissionTitle: {
-    fontSize: 22,
-    fontWeight: '700',
+    fontSize: fontSizes.title,
+    fontWeight: fontWeights.bold,
     color: colors.text,
   },
   permissionBody: {
@@ -249,11 +252,11 @@ const styles = StyleSheet.create({
   primaryButton: {
     paddingVertical: 12,
     paddingHorizontal: spacing.lg,
-    borderRadius: 10,
+    borderRadius: radius.md,
     backgroundColor: colors.primary,
   },
   primaryLabel: {
-    fontWeight: '600',
+    fontWeight: fontWeights.medium,
     color: colors.background,
   },
 });
