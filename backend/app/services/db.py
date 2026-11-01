@@ -155,6 +155,31 @@ async def insert_cooked(row: dict[str, Any]) -> str:
     return response.data[0]["id"]
 
 
+async def fetch_feed_page(limit: int, cursor: str | None) -> list[dict[str, Any]]:
+    client = await get_client()
+    query = (
+        client.table("cooked")
+        .select("*, recipes(*), scans(confirmed_ingredients)")
+        .eq("is_public", True)
+        .order("created_at", desc=True)
+        .limit(limit)
+    )
+    if cursor:
+        query = query.lt("created_at", cursor)
+    response = await run(query.execute())
+    return response.data
+
+
+async def fetch_display_names(user_ids: list[str]) -> dict[str, str]:
+    if not user_ids:
+        return {}
+    client = await get_client()
+    response = await run(
+        client.table("profiles").select("id, display_name").in_("id", user_ids).execute()
+    )
+    return {row["id"]: row["display_name"] for row in response.data if row["display_name"]}
+
+
 async def fetch_cooked_page(user_id: str, limit: int, cursor: str | None) -> list[dict[str, Any]]:
     client = await get_client()
     query = (

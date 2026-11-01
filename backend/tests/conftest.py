@@ -24,6 +24,8 @@ class FakeDb:
         self.chef_ids: dict[str, str] = {}
         self.owned_scans: set[str] = set()
         self.page: list[dict[str, Any]] = []
+        self.feed: list[dict[str, Any]] = []
+        self.names: dict[str, str] = {}
 
     async def search_chef_recipes(self, _: str) -> list[dict[str, Any]]:
         return []
@@ -65,6 +67,12 @@ class FakeDb:
     async def insert_cooked(self, row: dict[str, Any]) -> str:
         self.cooked.append(row)
         return "cooked-id"
+
+    async def fetch_feed_page(self, limit: int, _: str | None) -> list[dict[str, Any]]:
+        return self.feed[:limit]
+
+    async def fetch_display_names(self, _: list[str]) -> dict[str, str]:
+        return self.names
 
     async def fetch_cooked_page(self, _: str, limit: int, __: str | None) -> list[dict[str, Any]]:
         return self.page[:limit]

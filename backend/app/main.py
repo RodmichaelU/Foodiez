@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from app.config import get_settings
-from app.routers import cooked, profile, recipes, scan, search
+from app.routers import cooked, feed, profile, recipes, scan, search
 from app.services.db import DatabaseError
 from app.services.gemini import GeminiError
 
@@ -25,6 +25,7 @@ app.include_router(recipes.router)
 app.include_router(profile.router)
 app.include_router(cooked.router)
 app.include_router(search.router)
+app.include_router(feed.router)
 
 
 @app.exception_handler(GeminiError)
