@@ -1,21 +1,49 @@
 import { useLocalSearchParams } from 'expo-router';
-import { Image, ScrollView, StyleSheet, Text } from 'react-native';
+import { useCallback, useEffect, useState } from 'react';
+import { ActivityIndicator, Image, ScrollView, StyleSheet, Text } from 'react-native';
+
+import { errorMessage, getOnlineRecipe } from '@/src/api/client';
+import { ErrorState } from '@/src/components/ErrorState';
 
 import { PlaceholderScreen } from '@/src/components/PlaceholderScreen';
 import { RecipeSteps } from '@/src/components/RecipeSteps';
+import { SourceCredit } from '@/src/components/SourceCredit';
 import { formatIngredient } from '@/src/lib/format';
 import { getCooked } from '@/src/lib/session';
-import { colors, spacing } from '@/src/theme';
+import type { SavedRecipe } from '@/src/types';
+import { colors, fontSizes, fontWeights, radius, spacing } from '@/src/theme';
 
 export default function CookedDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const cooked = getCooked(id);
+  const saved = cooked?.recipe ?? null;
+  const [details, setDetails] = useState<SavedRecipe | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  // Online recipes may only be stored as id, title and image, so the rest loads when opened.
+  const needsDetails = saved?.source === 'online' && saved.steps.length === 0;
+  const externalId = saved?.external_id ?? null;
+
+  const loadDetails = useCallback(async () => {
+    if (!externalId) return;
+    setError(null);
+    try {
+      setDetails(await getOnlineRecipe(externalId));
+    } catch (loadError) {
+      setError(errorMessage(loadError));
+    }
+  }, [externalId]);
+
+  useEffect(() => {
+    if (needsDetails) loadDetails();
+  }, [needsDetails, loadDetails]);
 
   if (!cooked) {
     return <PlaceholderScreen title="Dish not found" subtitle="Please go back and try again." />;
   }
 
-  const { recipe } = cooked;
+  const recipe = details ?? saved;
+  const isLoadingDetails = needsDetails && !details && !error;
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
@@ -36,7 +64,10 @@ export default function CookedDetailScreen() {
         </>
       )}
 
-      {recipe && (
+      {isLoadingDetails && <ActivityIndicator style={styles.loading} color={colors.primary} />}
+      {needsDetails && error && <ErrorState message={error} onRetry={loadDetails} />}
+
+      {recipe && recipe.steps.length > 0 && (
         <>
           <Text style={styles.heading}>Recipe</Text>
           {recipe.ingredient_lines.map((line, index) => (
@@ -45,6 +76,7 @@ export default function CookedDetailScreen() {
             </Text>
           ))}
           <RecipeSteps steps={recipe.steps} />
+          <SourceCredit name={recipe.source_name} url={recipe.source_url} />
         </>
       )}
     </ScrollView>
@@ -64,32 +96,35 @@ const styles = StyleSheet.create({
     width: '100%',
     aspectRatio: 1,
     marginBottom: spacing.md,
-    borderRadius: 12,
+    borderRadius: radius.lg,
   },
   title: {
-    fontSize: 24,
-    fontWeight: '700',
+    fontSize: fontSizes.title,
+    fontWeight: fontWeights.bold,
     color: colors.text,
   },
   caption: {
     marginTop: spacing.sm,
-    fontSize: 16,
+    fontSize: fontSizes.body,
     color: colors.text,
   },
   meta: {
     marginTop: spacing.sm,
     color: colors.textMuted,
   },
+  loading: {
+    marginTop: spacing.lg,
+  },
   heading: {
     marginTop: spacing.lg,
     marginBottom: spacing.sm,
-    fontSize: 18,
-    fontWeight: '700',
+    fontSize: fontSizes.heading,
+    fontWeight: fontWeights.bold,
     color: colors.text,
   },
   line: {
     paddingVertical: 3,
-    fontSize: 16,
+    fontSize: fontSizes.body,
     color: colors.text,
   },
 });

@@ -3,10 +3,12 @@ import { File } from 'expo-file-system';
 import { supabase } from '@/src/lib/supabase';
 import type {
   CookedPage,
+  FeedPage,
   HealthResponse,
   Profile,
   Recipe,
   RecipesResponse,
+  SavedRecipe,
   ScanResponse,
 } from '@/src/types';
 
@@ -160,4 +162,13 @@ export function createCooked(cooked: NewCooked): Promise<{ id: string }> {
 export function getCookedPage(cursor: string | null): Promise<CookedPage> {
   const query = cursor ? `?cursor=${encodeURIComponent(cursor)}` : '';
   return request<CookedPage>(`/cooked${query}`);
+}
+
+export function getFeedPage(cursor: string | null): Promise<FeedPage> {
+  const query = cursor ? `?cursor=${encodeURIComponent(cursor)}` : '';
+  return request<FeedPage>(`/feed${query}`);
+}
+
+export function getOnlineRecipe(externalId: string): Promise<SavedRecipe> {
+  return request<SavedRecipe>(`/online-recipes/${encodeURIComponent(externalId)}`);
 }

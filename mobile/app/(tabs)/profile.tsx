@@ -13,8 +13,9 @@ import {
 
 import { errorMessage, getCookedPage, getProfile } from '@/src/api/client';
 import { ErrorState } from '@/src/components/ErrorState';
+import { SkeletonGrid } from '@/src/components/Skeleton';
 import { rememberCooked } from '@/src/lib/session';
-import { colors, spacing } from '@/src/theme';
+import { colors, fontSizes, fontWeights, spacing } from '@/src/theme';
 import type { CookedItem, Profile } from '@/src/types';
 
 const COLUMNS = 3;
@@ -67,7 +68,7 @@ export default function ProfileScreen() {
         {error ? (
           <ErrorState message={error} onRetry={load} />
         ) : (
-          <ActivityIndicator color={colors.primary} />
+          <SkeletonGrid />
         )}
       </View>
     );
@@ -125,7 +126,6 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   center: {
     flex: 1,
-    alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: colors.background,
   },
@@ -144,8 +144,8 @@ const styles = StyleSheet.create({
   },
   name: {
     flexShrink: 1,
-    fontSize: 22,
-    fontWeight: '700',
+    fontSize: fontSizes.title,
+    fontWeight: fontWeights.bold,
     color: colors.text,
   },
   counts: {

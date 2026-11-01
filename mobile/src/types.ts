@@ -39,6 +39,9 @@ export type Recipe = {
   total_core: number;
   missing: string[];
   match_known: boolean;
+  source_name: string | null;
+  source_url: string | null;
+  signature: string;
 };
 
 export type RecipesResponse = {
@@ -57,6 +60,9 @@ export type Profile = {
 export type SavedRecipe = {
   id: string;
   source: Recipe['source'];
+  external_id: string | null;
+  source_name: string | null;
+  source_url: string | null;
   title: string;
   description: string | null;
   ingredient_lines: { name: string; amount: string; unit: string }[];
@@ -77,5 +83,14 @@ export type CookedItem = {
 
 export type CookedPage = {
   items: CookedItem[];
+  next_cursor: string | null;
+};
+
+export type FeedItem = CookedItem & {
+  author_name: string;
+};
+
+export type FeedPage = {
+  items: FeedItem[];
   next_cursor: string | null;
 };
