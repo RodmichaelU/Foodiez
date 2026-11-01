@@ -1,0 +1,13 @@
+# Secrets: commit .env.example files only
+.env
+.env.*
+!.env.example
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# OS
+.DS_Store
