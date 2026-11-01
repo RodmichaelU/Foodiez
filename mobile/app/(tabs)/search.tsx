@@ -13,6 +13,7 @@ import {
 import { errorMessage, searchRecipes } from '@/src/api/client';
 import type { SearchMode } from '@/src/api/client';
 import { ErrorState } from '@/src/components/ErrorState';
+import { useTabBarSpace } from '@/src/components/GlassTabBar';
 import { RecipeCard } from '@/src/components/RecipeCard';
 import { rememberSearched, toSections } from '@/src/lib/session';
 import { colors, fontSizes, fontWeights, radius, spacing } from '@/src/theme';
@@ -30,6 +31,7 @@ const MODES: { value: SearchMode; label: string; placeholder: string }[] = [
 
 export default function SearchScreen() {
   const router = useRouter();
+  const tabBarSpace = useTabBarSpace();
   const [mode, setMode] = useState<SearchMode>('name');
   const [text, setText] = useState('');
   const [response, setResponse] = useState<RecipesResponse | null>(null);
@@ -127,7 +129,7 @@ export default function SearchScreen() {
         <SectionList
           sections={sections}
           keyExtractor={(recipe) => recipe.id}
-          contentContainerStyle={styles.list}
+          contentContainerStyle={[styles.list, { paddingBottom: tabBarSpace }]}
           keyboardShouldPersistTaps="handled"
           stickySectionHeadersEnabled={false}
           ListEmptyComponent={

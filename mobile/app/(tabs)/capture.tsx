@@ -8,6 +8,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { errorMessage, scanPhotos } from '@/src/api/client';
 import { ErrorState } from '@/src/components/ErrorState';
+import { useTabBarSpace } from '@/src/components/GlassTabBar';
 import { LoadingOverlay } from '@/src/components/LoadingOverlay';
 import { getDraft, setScan } from '@/src/lib/session';
 import { compressPhoto } from '@/src/lib/photos';
@@ -36,6 +37,7 @@ export default function CaptureScreen() {
   const isFocused = useIsFocused();
   const router = useRouter();
   const insets = useSafeAreaInsets();
+  const tabBarSpace = useTabBarSpace();
   const [photos, setPhotos] = useState<string[]>([]);
   const [isTaking, setIsTaking] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
@@ -100,7 +102,7 @@ export default function CaptureScreen() {
     <View style={styles.container}>
       {isFocused && <CameraView ref={camera} style={StyleSheet.absoluteFill} facing="back" />}
 
-      <View style={[styles.controls, { paddingTop: insets.top }]}>
+      <View style={[styles.controls, { paddingTop: insets.top, paddingBottom: tabBarSpace }]}>
         {error && (
           <View style={styles.errorCard}>
             <ErrorState message={error} onRetry={() => retry.current()} />
@@ -202,7 +204,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: spacing.lg,
   },
   count: {
     width: 110,

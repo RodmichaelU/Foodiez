@@ -13,6 +13,7 @@ import {
 
 import { errorMessage, getCookedPage, getProfile } from '@/src/api/client';
 import { ErrorState } from '@/src/components/ErrorState';
+import { useTabBarSpace } from '@/src/components/GlassTabBar';
 import { SkeletonGrid } from '@/src/components/Skeleton';
 import { rememberCooked } from '@/src/lib/session';
 import { colors, fontSizes, fontWeights, spacing } from '@/src/theme';
@@ -22,6 +23,7 @@ const COLUMNS = 3;
 
 export default function ProfileScreen() {
   const router = useRouter();
+  const tabBarSpace = useTabBarSpace();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [items, setItems] = useState<CookedItem[]>([]);
   const [cursor, setCursor] = useState<string | null>(null);
@@ -80,6 +82,7 @@ export default function ProfileScreen() {
       data={items}
       keyExtractor={(item) => item.id}
       numColumns={COLUMNS}
+      contentContainerStyle={{ paddingBottom: tabBarSpace }}
       onEndReached={loadMore}
       ListHeaderComponent={
         <View style={styles.header}>
