@@ -39,6 +39,8 @@ def to_candidate(meal: dict[str, Any]) -> RecipeCandidate:
         steps=[line.strip() for line in instructions.splitlines() if line.strip()],
         image_url=meal.get("strMealThumb"),
         prep_minutes=None,
+        source_name="TheMealDB",
+        source_url=meal.get("strSource") or None,
     )
 
 

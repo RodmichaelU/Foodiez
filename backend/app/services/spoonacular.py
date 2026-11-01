@@ -56,6 +56,8 @@ def to_candidate(info: dict[str, Any]) -> RecipeCandidate:
         steps=_steps(info),
         image_url=info.get("image"),
         prep_minutes=info.get("readyInMinutes"),
+        source_name=info.get("sourceName") or info.get("creditsText"),
+        source_url=info.get("sourceUrl"),
     )
 
 
@@ -118,3 +120,13 @@ async def search_by_name(query: str) -> list[RecipeCandidate]:
     return [
         candidate for candidate in map(to_candidate, response.json()["results"]) if candidate.steps
     ]
+
+
+async def get_recipe(recipe_id: str) -> RecipeCandidate:
+    api_key = get_settings().spoonacular_api_key
+    async with httpx.AsyncClient(
+        base_url=BASE_URL, headers={"x-api-key": api_key}, timeout=TIMEOUT_SECONDS
+    ) as client:
+        response = await client.get(f"/{recipe_id}/information")
+        response.raise_for_status()
+    return to_candidate(response.json())

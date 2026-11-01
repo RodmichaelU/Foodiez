@@ -1,11 +1,11 @@
 from typing import Any
-from urllib.parse import urlparse
 from uuid import UUID, uuid4
 
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
 from pydantic import ValidationError
 
 from app.core.auth import get_current_user
+from app.core.signing import is_signature_valid
 from app.models import CookedCreated, CookedItem, CookedPage, Recipe, SavedRecipe
 from app.routers.scan import read_jpeg
 from app.services import db
@@ -13,7 +13,7 @@ from app.services import db
 MAX_RECIPE_JSON_CHARS = 100_000
 MAX_CAPTION_CHARS = 300
 PAGE_SIZE = 30
-ALLOWED_IMAGE_HOSTS = {"img.spoonacular.com", "www.themealdb.com"}
+MEALDB_ID_PREFIX = "mealdb-"
 
 router = APIRouter()
 
@@ -26,9 +26,9 @@ def _parse_recipe(recipe_json: str) -> Recipe:
     except ValidationError as error:
         raise HTTPException(400, "That recipe could not be saved.") from error
 
-    # The recipe comes from the client, and saved recipes are visible to other users.
-    if recipe.image_url and urlparse(recipe.image_url).hostname not in ALLOWED_IMAGE_HOSTS:
-        raise HTTPException(400, "That recipe could not be saved.")
+    # Saved recipes are visible to other users, so only accept what this server produced.
+    if not is_signature_valid(recipe):
+        raise HTTPException(400, "That recipe could not be saved. Please search for it again.")
     return recipe
 
 
@@ -39,6 +39,22 @@ async def _save_recipe(recipe: Recipe) -> str:
         recipe_id = await db.find_recipe_id("chef", external_id)
         if recipe_id is None:
             raise HTTPException(404, "That recipe no longer exists.")
+        return recipe_id
+
+    if recipe.source == "online" and not external_id.startswith(MEALDB_ID_PREFIX):
+        # Spoonacular's terms only allow storing the id, title and image url. The rest is
+        # fetched again when someone opens the recipe.
+        recipe_id = await db.save_recipe(
+            {
+                "source": recipe.source,
+                "external_id": external_id,
+                "title": recipe.title,
+                "core_ingredients": [],
+                "image_url": recipe.image_url,
+            }
+        )
+        if recipe_id is None:
+            raise db.DatabaseError("Recipe was not saved")
         return recipe_id
 
     recipe_id = await db.save_recipe(
@@ -99,7 +115,7 @@ async def create_cooked(
     return CookedCreated(id=cooked_id)
 
 
-def _to_item(row: dict[str, Any], signed_urls: dict[str, str]) -> CookedItem:
+def to_item(row: dict[str, Any], signed_urls: dict[str, str]) -> CookedItem:
     recipe = row.get("recipes")
     scan = row.get("scans") or {}
     return CookedItem(
@@ -131,6 +147,6 @@ async def list_cooked(
     signed_urls = await db.signed_scan_photo_urls(scan_photos)
 
     return CookedPage(
-        items=[_to_item(row, signed_urls) for row in page],
+        items=[to_item(row, signed_urls) for row in page],
         next_cursor=page[-1]["created_at"] if len(rows) > PAGE_SIZE else None,
     )

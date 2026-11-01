@@ -7,6 +7,7 @@ from app.core import normalize as normalization
 from app.core.cache import TTLCache
 from app.core.merge import merge_name_search, merge_recipes
 from app.core.normalize import normalize
+from app.core.signing import sign_recipe
 from app.core.scoring import contains_avoided, is_excluded, owned_ingredients, score_recipe
 from app.models import IngredientLine, Recipe, RecipeCandidate, RecipesResponse
 from app.services import chef_picks, gemini, mealdb, spoonacular
@@ -14,7 +15,9 @@ from app.services import chef_picks, gemini, mealdb, spoonacular
 logger = logging.getLogger(__name__)
 
 SOURCE_TIMEOUT_SECONDS = 15
-ONLINE_CACHE_TTL_SECONDS = 24 * 60 * 60
+# Spoonacular's terms allow caching for at most one hour.
+ONLINE_CACHE_TTL_SECONDS = 60 * 60
+AI_CACHE_TTL_SECONDS = 24 * 60 * 60
 MIN_ONLINE_RESULTS = 3
 GOOD_MATCH_SCORE = 0.6
 MIN_GOOD_MATCHES = 3
@@ -22,7 +25,7 @@ MIN_GOOD_MATCHES = 3
 online_cache: TTLCache[tuple[str, ...], list[RecipeCandidate]] = TTLCache(ONLINE_CACHE_TTL_SECONDS)
 name_cache: TTLCache[str, list[RecipeCandidate]] = TTLCache(ONLINE_CACHE_TTL_SECONDS)
 dish_cache: TTLCache[tuple[str, tuple[str, ...]], list[RecipeCandidate]] = TTLCache(
-    ONLINE_CACHE_TTL_SECONDS
+    AI_CACHE_TTL_SECONDS
 )
 
 
@@ -84,7 +87,7 @@ def _to_recipe(candidate: RecipeCandidate, owned: set[str], match_known: bool = 
     recipe_id = (
         f"{candidate.source}-{candidate.external_id}" if candidate.external_id else str(uuid4())
     )
-    return Recipe(
+    recipe = Recipe(
         **fields,
         id=recipe_id,
         ingredient_lines=[
@@ -97,6 +100,8 @@ def _to_recipe(candidate: RecipeCandidate, owned: set[str], match_known: bool = 
         missing=result.missing,
         match_known=match_known,
     )
+    recipe.signature = sign_recipe(recipe)
+    return recipe
 
 
 def _score(

@@ -3,7 +3,10 @@ from typing import Any
 
 from fastapi.testclient import TestClient
 
+from app.config import Settings
+from app.core.signing import sign_recipe
 from app.main import app
+from app.models import Recipe
 from tests.conftest import USER_ID, FakeDb
 
 client = TestClient(app)
@@ -11,9 +14,9 @@ SCAN_ID = "22222222-2222-2222-2222-222222222222"
 JPEG = ("photo.jpg", b"\xff\xd8\xffdata", "image/jpeg")
 
 
-def _recipe(**overrides: Any) -> str:
-    return json.dumps(
-        {
+def _recipe(sign: bool = True, **overrides: Any) -> str:
+    recipe = Recipe(
+        **{
             "id": "online-123",
             "source": "online",
             "title": "Soup",
@@ -33,6 +36,9 @@ def _recipe(**overrides: Any) -> str:
             **overrides,
         }
     )
+    if sign:
+        recipe.signature = sign_recipe(recipe)
+    return recipe.model_dump_json()
 
 
 def test_saves_recipe_photo_and_row(fake_db: FakeDb) -> None:
@@ -47,7 +53,6 @@ def test_saves_recipe_photo_and_row(fake_db: FakeDb) -> None:
     assert response.json() == {"id": "cooked-id"}
     saved = fake_db.saved_recipes[0]
     assert saved["external_id"] == "123"
-    assert saved["ingredient_lines"] == [{"name": "Egg", "amount": "1", "unit": ""}]
     row = fake_db.cooked[0]
     assert row["user_id"] == USER_ID
     assert row["caption"] == "Tasty"
@@ -82,10 +87,38 @@ def test_unknown_chef_pick_is_rejected() -> None:
     assert response.status_code == 404
 
 
-def test_rejects_image_from_unknown_host() -> None:
-    recipe = _recipe(image_url="https://evil.example/tracker.png")
+def test_spoonacular_recipes_store_only_what_the_terms_allow(fake_db: FakeDb) -> None:
+    client.post("/cooked", data={"recipe": _recipe(image_url="https://img/1.jpg")})
 
-    assert client.post("/cooked", data={"recipe": recipe}).status_code == 400
+    assert fake_db.saved_recipes == [
+        {
+            "source": "online",
+            "external_id": "123",
+            "title": "Soup",
+            "core_ingredients": [],
+            "image_url": "https://img/1.jpg",
+        }
+    ]
+
+
+def test_ai_and_mealdb_recipes_keep_their_details(fake_db: FakeDb) -> None:
+    client.post("/cooked", data={"recipe": _recipe(id="online-mealdb-5")})
+    client.post("/cooked", data={"recipe": _recipe(id="abc", source="ai")})
+
+    assert all(row["steps"] == ["Cook."] for row in fake_db.saved_recipes)
+
+
+def test_rejects_unsigned_recipe(fake_db: FakeDb) -> None:
+    assert client.post("/cooked", data={"recipe": _recipe(sign=False)}).status_code == 400
+    assert fake_db.saved_recipes == []
+
+
+def test_rejects_recipe_changed_after_signing(fake_db: FakeDb) -> None:
+    tampered = json.loads(_recipe())
+    tampered["title"] = "Something else"
+
+    assert client.post("/cooked", data={"recipe": json.dumps(tampered)}).status_code == 400
+    assert fake_db.saved_recipes == []
 
 
 def test_rejects_malformed_recipe_and_long_caption() -> None:
@@ -132,3 +165,7 @@ def test_history_pages_with_a_cursor(fake_db: FakeDb) -> None:
 
     assert len(body["items"]) == 30
     assert body["next_cursor"] == "2026-01-29"
+
+
+def test_empty_signing_secret_is_replaced() -> None:
+    assert Settings(recipe_signing_secret="").recipe_signing_secret != ""

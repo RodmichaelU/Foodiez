@@ -68,6 +68,8 @@ class RecipeCandidate(BaseModel):
     steps: list[str]
     image_url: str | None = None
     prep_minutes: int | None = None
+    source_name: str | None = None
+    source_url: str | None = None
 
 
 class Recipe(BaseModel):
@@ -81,12 +83,15 @@ class Recipe(BaseModel):
     steps: list[str]
     image_url: str | None = None
     prep_minutes: int | None = None
+    source_name: str | None = None
+    source_url: str | None = None
     score: float
     have_count: int
     total_core: int
     missing: list[str]
     # False for name searches, where nothing is known about what the user has.
     match_known: bool = True
+    signature: str = ""
 
 
 class RecipesResponse(BaseModel):
@@ -116,6 +121,9 @@ class SavedIngredientLine(BaseModel):
 class SavedRecipe(BaseModel):
     id: str
     source: Literal["chef", "online", "ai"]
+    external_id: str | None = None
+    source_name: str | None = None
+    source_url: str | None = None
     title: str
     description: str | None = None
     ingredient_lines: list[SavedIngredientLine]
@@ -141,3 +149,12 @@ class CookedPage(BaseModel):
 
 class CookedCreated(BaseModel):
     id: str
+
+
+class FeedItem(CookedItem):
+    author_name: str
+
+
+class FeedPage(BaseModel):
+    items: list[FeedItem]
+    next_cursor: str | None
