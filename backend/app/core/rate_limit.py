@@ -10,8 +10,13 @@ class RateLimiter:
     """Sliding-window limiter held in memory, so limits apply per server process."""
 
     def __init__(
-        self, per_minute: int, per_day: int, clock: Callable[[], float] = time.monotonic
+        self,
+        per_minute: int,
+        per_day: int,
+        action: str = "scans",
+        clock: Callable[[], float] = time.monotonic,
     ) -> None:
+        self.action = action
         self.per_minute = per_minute
         self.per_day = per_day
         self.clock = clock
@@ -25,12 +30,14 @@ class RateLimiter:
             hits.popleft()
 
         if len(hits) >= self.per_day:
-            return "You have used all your scans for today. Please come back tomorrow."
+            return f"You have used all your {self.action} for today. Please come back tomorrow."
         if sum(now - hit < MINUTE_SECONDS for hit in hits) >= self.per_minute:
-            return "Too many scans right now, try again in a minute."
+            return f"Too many {self.action} right now, try again in a minute."
 
         hits.append(now)
         return None
 
 
 scan_limiter = RateLimiter(per_minute=5, per_day=20)
+# Searches run while typing, so they get more room than scans.
+search_limiter = RateLimiter(per_minute=20, per_day=200, action="searches")

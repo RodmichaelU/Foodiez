@@ -85,6 +85,8 @@ class Recipe(BaseModel):
     have_count: int
     total_core: int
     missing: list[str]
+    # False for name searches, where nothing is known about what the user has.
+    match_known: bool = True
 
 
 class RecipesResponse(BaseModel):

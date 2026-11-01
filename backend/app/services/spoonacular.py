@@ -93,3 +93,28 @@ async def find_by_ingredients(ingredients: list[str]) -> list[RecipeCandidate]:
     return [
         candidate for candidate in map(to_candidate, details.json()) if candidate.steps
     ]
+
+
+async def search_by_name(query: str) -> list[RecipeCandidate]:
+    api_key = get_settings().spoonacular_api_key
+    if not api_key:
+        return []
+
+    async with httpx.AsyncClient(
+        base_url=BASE_URL, headers={"x-api-key": api_key}, timeout=TIMEOUT_SECONDS
+    ) as client:
+        response = await client.get(
+            "/complexSearch",
+            params={
+                "query": query,
+                "number": SEARCH_COUNT,
+                "addRecipeInformation": "true",
+                "fillIngredients": "true",
+                "instructionsRequired": "true",
+            },
+        )
+        response.raise_for_status()
+
+    return [
+        candidate for candidate in map(to_candidate, response.json()["results"]) if candidate.steps
+    ]

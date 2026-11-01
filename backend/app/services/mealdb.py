@@ -62,3 +62,12 @@ async def find_by_ingredient(ingredient: str) -> list[RecipeCandidate]:
         for meal in lookup.json().get("meals") or []
     ]
     return [candidate for candidate in map(to_candidate, details) if candidate.steps]
+
+
+async def search_by_name(query: str) -> list[RecipeCandidate]:
+    async with httpx.AsyncClient(base_url=BASE_URL, timeout=TIMEOUT_SECONDS) as client:
+        response = await client.get("/search.php", params={"s": query})
+        response.raise_for_status()
+
+    meals = (response.json().get("meals") or [])[:DETAIL_COUNT]
+    return [candidate for candidate in map(to_candidate, meals) if candidate.steps]

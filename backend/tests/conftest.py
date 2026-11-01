@@ -5,10 +5,10 @@ import pytest
 
 from app.core import normalize
 from app.core.auth import get_current_user, token_cache
-from app.core.rate_limit import scan_limiter
+from app.core.rate_limit import scan_limiter, search_limiter
 from app.main import app
 from app.services import db
-from app.services.recipe_search import online_cache
+from app.services.recipe_search import dish_cache, name_cache, online_cache
 
 USER_ID = "11111111-1111-1111-1111-111111111111"
 
@@ -24,6 +24,9 @@ class FakeDb:
         self.chef_ids: dict[str, str] = {}
         self.owned_scans: set[str] = set()
         self.page: list[dict[str, Any]] = []
+
+    async def search_chef_recipes(self, _: str) -> list[dict[str, Any]]:
+        return []
 
     async def fetch_profile(self, _: str) -> dict[str, Any] | None:
         return self.profile
@@ -88,7 +91,10 @@ def offline_index(monkeypatch: pytest.MonkeyPatch) -> Iterator[None]:
     monkeypatch.setattr(normalize, "refresh_ingredients", no_refresh)
     online_cache.clear()
     token_cache.clear()
+    name_cache.clear()
+    dish_cache.clear()
     scan_limiter._hits.clear()
+    search_limiter._hits.clear()
     yield
     online_cache.clear()
 

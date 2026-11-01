@@ -10,6 +10,12 @@ from app.services.recipe_search import search_recipes
 router = APIRouter()
 
 
+async def load_avoid(user_id: str) -> list[str]:
+    """Not caught on purpose: never show recipes if the user's allergies could not be loaded."""
+    profile = await db.fetch_profile(user_id)
+    return (profile.get("avoid_ingredients") or []) if profile else []
+
+
 @router.post("/recipes")
 async def recipes(
     request: RecipesRequest,
@@ -19,9 +25,7 @@ async def recipes(
     if not any(map(clean_name, request.ingredients)):
         raise HTTPException(400, "Please add at least one ingredient.")
 
-    # Not caught on purpose: never show recipes if the user's allergies could not be loaded.
-    profile = await db.fetch_profile(user_id)
-    avoid = profile.get("avoid_ingredients") or [] if profile else []
+    avoid = await load_avoid(user_id)
 
     if request.scan_id:
         background_tasks.add_task(

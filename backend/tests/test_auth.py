@@ -11,7 +11,7 @@ from app.services import db
 
 client = TestClient(app)
 HEADERS = {"Authorization": "Bearer token"}
-PROTECTED = [("post", "/recipes"), ("post", "/scan"), ("get", "/profile"), ("put", "/profile"), ("get", "/cooked"), ("post", "/cooked")]  # fmt: skip
+PROTECTED = [("post", "/recipes"), ("post", "/scan"), ("get", "/profile"), ("put", "/profile"), ("get", "/cooked"), ("post", "/cooked"), ("get", "/search?q=egg")]  # fmt: skip
 
 
 @pytest.fixture(autouse=True)

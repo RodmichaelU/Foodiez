@@ -18,6 +18,16 @@ def _deduplicate(recipes: list[Recipe]) -> list[Recipe]:
     return unique
 
 
+def merge_name_search(recipes: list[Recipe]) -> RecipesResponse:
+    """Group name search results. Without known ingredients there is no score to rank by."""
+    unique = _deduplicate(recipes)
+    return RecipesResponse(
+        chef_picks=[recipe for recipe in unique if recipe.source == "chef"],
+        online=[recipe for recipe in unique if recipe.source == "online"],
+        ai=[recipe for recipe in unique if recipe.source == "ai"],
+    )
+
+
 def merge_recipes(recipes: list[Recipe]) -> RecipesResponse:
     # Chef's Picks below the threshold are dropped: they have no section of their own.
     eligible = [

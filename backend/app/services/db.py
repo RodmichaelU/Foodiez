@@ -48,6 +48,20 @@ async def fetch_chef_recipes() -> list[dict[str, Any]]:
     return response.data
 
 
+async def search_chef_recipes(query: str) -> list[dict[str, Any]]:
+    client = await get_client()
+    # Typed % and _ are wildcards in ilike, so they must be matched literally.
+    escaped = query.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
+    response = await run(
+        client.table("recipes")
+        .select("*")
+        .eq("source", "chef")
+        .ilike("title", f"%{escaped}%")
+        .execute()
+    )
+    return response.data
+
+
 async def fetch_profile(user_id: str) -> dict[str, Any] | None:
     client = await get_client()
     response = await run(client.table("profiles").select("*").eq("id", user_id).execute())

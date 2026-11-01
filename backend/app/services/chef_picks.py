@@ -28,5 +28,9 @@ def _to_candidate(row: dict[str, Any]) -> RecipeCandidate:
     )
 
 
+async def search_chef_picks(query: str) -> list[RecipeCandidate]:
+    return [_to_candidate(row) for row in await db.search_chef_recipes(query)]
+
+
 async def fetch_chef_picks() -> list[RecipeCandidate]:
     return [_to_candidate(row) for row in await db.fetch_chef_recipes()]
