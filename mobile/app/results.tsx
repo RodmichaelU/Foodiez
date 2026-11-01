@@ -3,7 +3,7 @@ import { SectionList, StyleSheet, Text, View } from 'react-native';
 
 import { RecipeCard } from '@/src/components/RecipeCard';
 import { getResultSections } from '@/src/lib/session';
-import { colors, spacing } from '@/src/theme';
+import { colors, fontSizes, fontWeights, spacing } from '@/src/theme';
 
 export default function ResultsScreen() {
   const router = useRouter();
@@ -42,8 +42,8 @@ const styles = StyleSheet.create({
   },
   heading: {
     marginBottom: spacing.sm,
-    fontSize: 20,
-    fontWeight: '700',
+    fontSize: fontSizes.section,
+    fontWeight: fontWeights.bold,
     color: colors.text,
   },
   empty: {

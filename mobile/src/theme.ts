@@ -15,3 +15,25 @@ export const spacing = {
   md: 16,
   lg: 24,
 };
+
+export const fontSizes = {
+  caption: 12,
+  small: 14,
+  body: 16,
+  cardTitle: 17,
+  heading: 18,
+  section: 20,
+  title: 24,
+  display: 26,
+};
+
+export const fontWeights = {
+  medium: '600',
+  bold: '700',
+} as const;
+
+export const radius = {
+  sm: 8,
+  md: 10,
+  lg: 12,
+};

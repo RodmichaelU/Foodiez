@@ -2,7 +2,7 @@ import { SymbolView } from 'expo-symbols';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { formatIngredient } from '@/src/lib/format';
-import { colors, spacing } from '@/src/theme';
+import { colors, fontSizes, fontWeights, radius, spacing } from '@/src/theme';
 import type { Recipe } from '@/src/types';
 
 type Props = {
@@ -53,7 +53,7 @@ export function RecipeCard({ recipe, onPress }: Props) {
 const styles = StyleSheet.create({
   card: {
     marginBottom: spacing.md,
-    borderRadius: 12,
+    borderRadius: radius.lg,
     borderWidth: 1,
     borderColor: colors.border,
     overflow: 'hidden',
@@ -79,10 +79,10 @@ const styles = StyleSheet.create({
     marginBottom: spacing.sm,
     paddingHorizontal: spacing.sm,
     paddingVertical: 2,
-    borderRadius: 6,
+    borderRadius: radius.sm,
     overflow: 'hidden',
-    fontSize: 12,
-    fontWeight: '600',
+    fontSize: fontSizes.caption,
+    fontWeight: fontWeights.medium,
     color: colors.primary,
     backgroundColor: colors.surface,
   },
@@ -91,8 +91,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary,
   },
   title: {
-    fontSize: 17,
-    fontWeight: '700',
+    fontSize: fontSizes.cardTitle,
+    fontWeight: fontWeights.bold,
     color: colors.text,
   },
   meta: {

@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native';
 
-import { colors, spacing } from '@/src/theme';
+import { colors, fontSizes, fontWeights, spacing } from '@/src/theme';
 
 export function RecipeSteps({ steps }: { steps: string[] }) {
   return (
@@ -22,8 +22,8 @@ const styles = StyleSheet.create({
   },
   heading: {
     marginBottom: spacing.sm,
-    fontSize: 18,
-    fontWeight: '700',
+    fontSize: fontSizes.heading,
+    fontWeight: fontWeights.bold,
     color: colors.text,
   },
   step: {
@@ -32,13 +32,13 @@ const styles = StyleSheet.create({
     marginBottom: spacing.sm,
   },
   number: {
-    fontSize: 16,
-    fontWeight: '700',
+    fontSize: fontSizes.body,
+    fontWeight: fontWeights.bold,
     color: colors.primary,
   },
   text: {
     flex: 1,
-    fontSize: 16,
+    fontSize: fontSizes.body,
     color: colors.text,
   },
 });

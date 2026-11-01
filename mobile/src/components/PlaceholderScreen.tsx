@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native';
 
-import { colors, spacing } from '@/src/theme';
+import { colors, fontSizes, fontWeights, spacing } from '@/src/theme';
 
 type Props = {
   title: string;
@@ -25,8 +25,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
   },
   title: {
-    fontSize: 22,
-    fontWeight: '700',
+    fontSize: fontSizes.title,
+    fontWeight: fontWeights.bold,
     color: colors.text,
   },
   subtitle: {

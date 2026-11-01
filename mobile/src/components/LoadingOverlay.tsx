@@ -1,6 +1,6 @@
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 
-import { colors, spacing } from '@/src/theme';
+import { colors, fontSizes, fontWeights, spacing } from '@/src/theme';
 
 export function LoadingOverlay({ message }: { message: string }) {
   return (
@@ -20,8 +20,8 @@ const styles = StyleSheet.create({
   },
   message: {
     marginTop: spacing.md,
-    fontSize: 16,
-    fontWeight: '600',
+    fontSize: fontSizes.body,
+    fontWeight: fontWeights.medium,
     color: colors.background,
   },
 });

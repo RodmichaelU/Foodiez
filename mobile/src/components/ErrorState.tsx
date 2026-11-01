@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { colors, spacing } from '@/src/theme';
+import { colors, fontWeights, radius, spacing } from '@/src/theme';
 
 type Props = {
   message: string;
@@ -31,11 +31,11 @@ const styles = StyleSheet.create({
     marginTop: spacing.md,
     paddingVertical: spacing.sm,
     paddingHorizontal: spacing.md,
-    borderRadius: 8,
+    borderRadius: radius.sm,
     backgroundColor: colors.primary,
   },
   retryLabel: {
-    fontWeight: '600',
+    fontWeight: fontWeights.medium,
     color: colors.background,
   },
 });

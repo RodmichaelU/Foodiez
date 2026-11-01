@@ -3,8 +3,9 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { PlaceholderScreen } from '@/src/components/PlaceholderScreen';
 import { RecipeSteps } from '@/src/components/RecipeSteps';
+import { SourceCredit } from '@/src/components/SourceCredit';
 import { getRecipe } from '@/src/lib/session';
-import { colors, spacing } from '@/src/theme';
+import { colors, fontSizes, fontWeights, radius, spacing } from '@/src/theme';
 import type { IngredientLine, Recipe } from '@/src/types';
 
 const SOURCE_LABELS: Record<Recipe['source'], string> = {
@@ -59,6 +60,7 @@ export default function RecipeScreen() {
       )}
 
       <RecipeSteps steps={recipe.steps} />
+      <SourceCredit name={recipe.source_name} url={recipe.source_url} />
 
       <Pressable
         style={styles.madeThis}
@@ -80,13 +82,13 @@ const styles = StyleSheet.create({
     paddingBottom: spacing.lg,
   },
   source: {
-    fontWeight: '600',
+    fontWeight: fontWeights.medium,
     color: colors.primary,
   },
   title: {
     marginTop: 4,
-    fontSize: 24,
-    fontWeight: '700',
+    fontSize: fontSizes.title,
+    fontWeight: fontWeights.bold,
     color: colors.text,
   },
   meta: {
@@ -95,7 +97,7 @@ const styles = StyleSheet.create({
   },
   description: {
     marginTop: spacing.sm,
-    fontSize: 16,
+    fontSize: fontSizes.body,
     color: colors.text,
   },
   section: {
@@ -103,24 +105,24 @@ const styles = StyleSheet.create({
   },
   heading: {
     marginBottom: spacing.sm,
-    fontSize: 18,
-    fontWeight: '700',
+    fontSize: fontSizes.heading,
+    fontWeight: fontWeights.bold,
     color: colors.text,
   },
   line: {
     paddingVertical: 3,
-    fontSize: 16,
+    fontSize: fontSizes.body,
     color: colors.text,
   },
   madeThis: {
     alignItems: 'center',
     marginTop: spacing.lg,
     paddingVertical: 14,
-    borderRadius: 10,
+    borderRadius: radius.md,
     backgroundColor: colors.primary,
   },
   madeThisLabel: {
-    fontWeight: '600',
+    fontWeight: fontWeights.medium,
     color: colors.background,
   },
 });

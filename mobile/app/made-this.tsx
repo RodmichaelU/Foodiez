@@ -19,7 +19,7 @@ import { LoadingOverlay } from '@/src/components/LoadingOverlay';
 import { PlaceholderScreen } from '@/src/components/PlaceholderScreen';
 import { compressPhoto } from '@/src/lib/photos';
 import { getRecipe, getScanIdForRecipe } from '@/src/lib/session';
-import { colors, spacing } from '@/src/theme';
+import { colors, fontSizes, fontWeights, radius, spacing } from '@/src/theme';
 
 const MAX_CAPTION_LENGTH = 300;
 
@@ -139,14 +139,14 @@ const styles = StyleSheet.create({
     padding: spacing.md,
   },
   title: {
-    fontSize: 22,
-    fontWeight: '700',
+    fontSize: fontSizes.title,
+    fontWeight: fontWeights.bold,
     color: colors.text,
   },
   photo: {
     width: '100%',
     aspectRatio: 1,
-    borderRadius: 12,
+    borderRadius: radius.lg,
   },
   photoButtons: {
     flexDirection: 'row',
@@ -156,18 +156,18 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     paddingVertical: 12,
-    borderRadius: 10,
+    borderRadius: radius.md,
     borderWidth: 1,
     borderColor: colors.border,
   },
   secondaryLabel: {
-    fontWeight: '600',
+    fontWeight: fontWeights.medium,
     color: colors.text,
   },
   input: {
     minHeight: 80,
     padding: 12,
-    borderRadius: 10,
+    borderRadius: radius.md,
     borderWidth: 1,
     borderColor: colors.border,
     color: colors.text,
@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   publicLabel: {
-    fontSize: 16,
+    fontSize: fontSizes.body,
     color: colors.text,
   },
   publicHint: {
@@ -194,11 +194,11 @@ const styles = StyleSheet.create({
   saveButton: {
     alignItems: 'center',
     paddingVertical: 14,
-    borderRadius: 10,
+    borderRadius: radius.md,
     backgroundColor: colors.primary,
   },
   saveLabel: {
-    fontWeight: '600',
+    fontWeight: fontWeights.medium,
     color: colors.background,
   },
 });

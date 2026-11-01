@@ -9,7 +9,7 @@ import { LoadingOverlay } from '@/src/components/LoadingOverlay';
 import { toCanonicalName } from '@/src/lib/format';
 import { getDraft, hasResultsFor, setResults, updateDraft } from '@/src/lib/session';
 import type { DraftItem } from '@/src/lib/session';
-import { colors, spacing } from '@/src/theme';
+import { colors, fontSizes, fontWeights, radius, spacing } from '@/src/theme';
 
 export default function ConfirmScreen() {
   const router = useRouter();
@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 12,
     paddingVertical: 10,
-    borderRadius: 10,
+    borderRadius: radius.md,
     borderWidth: 1,
     borderColor: colors.border,
     color: colors.text,
@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
   addButton: {
     justifyContent: 'center',
     paddingHorizontal: spacing.md,
-    borderRadius: 10,
+    borderRadius: radius.md,
     backgroundColor: colors.primary,
   },
   empty: {
@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
   },
   rowLabel: {
     flexShrink: 1,
-    fontSize: 16,
+    fontSize: fontSizes.body,
     color: colors.text,
   },
   footer: {
@@ -204,14 +204,14 @@ const styles = StyleSheet.create({
   showButton: {
     alignItems: 'center',
     paddingVertical: 14,
-    borderRadius: 10,
+    borderRadius: radius.md,
     backgroundColor: colors.primary,
   },
   disabled: {
     opacity: 0.4,
   },
   primaryLabel: {
-    fontWeight: '600',
+    fontWeight: fontWeights.medium,
     color: colors.background,
   },
 });

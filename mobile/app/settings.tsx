@@ -14,7 +14,7 @@ import { ErrorState } from '@/src/components/ErrorState';
 import { formatIngredient } from '@/src/lib/format';
 import { clearResults } from '@/src/lib/session';
 import { supabase } from '@/src/lib/supabase';
-import { colors, spacing } from '@/src/theme';
+import { colors, fontSizes, fontWeights, radius, spacing } from '@/src/theme';
 
 export default function SettingsScreen() {
   const [isLoading, setIsLoading] = useState(true);
@@ -165,8 +165,8 @@ const styles = StyleSheet.create({
   heading: {
     marginTop: spacing.md,
     marginBottom: spacing.sm,
-    fontSize: 18,
-    fontWeight: '700',
+    fontSize: fontSizes.heading,
+    fontWeight: fontWeights.bold,
     color: colors.text,
   },
   hint: {
@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
   input: {
     paddingHorizontal: 12,
     paddingVertical: 10,
-    borderRadius: 10,
+    borderRadius: radius.md,
     borderWidth: 1,
     borderColor: colors.border,
     color: colors.text,
@@ -192,11 +192,11 @@ const styles = StyleSheet.create({
   addButton: {
     justifyContent: 'center',
     paddingHorizontal: spacing.md,
-    borderRadius: 10,
+    borderRadius: radius.md,
     backgroundColor: colors.primary,
   },
   addLabel: {
-    fontWeight: '600',
+    fontWeight: fontWeights.medium,
     color: colors.background,
   },
   avoidRow: {
@@ -208,7 +208,7 @@ const styles = StyleSheet.create({
     borderBottomColor: colors.border,
   },
   avoidLabel: {
-    fontSize: 16,
+    fontSize: fontSizes.body,
     color: colors.text,
   },
   remove: {
@@ -222,12 +222,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: spacing.lg,
     paddingVertical: 14,
-    borderRadius: 10,
+    borderRadius: radius.md,
     borderWidth: 1,
     borderColor: colors.border,
   },
   logOutLabel: {
-    fontWeight: '600',
+    fontWeight: fontWeights.medium,
     color: colors.danger,
   },
 });

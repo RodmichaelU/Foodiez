@@ -15,7 +15,7 @@ import type { SearchMode } from '@/src/api/client';
 import { ErrorState } from '@/src/components/ErrorState';
 import { RecipeCard } from '@/src/components/RecipeCard';
 import { rememberSearched, toSections } from '@/src/lib/session';
-import { colors, spacing } from '@/src/theme';
+import { colors, fontSizes, fontWeights, radius, spacing } from '@/src/theme';
 import type { RecipesResponse } from '@/src/types';
 
 const DEBOUNCE_MS = 600;
@@ -177,20 +177,20 @@ const styles = StyleSheet.create({
   modes: {
     flexDirection: 'row',
     padding: 2,
-    borderRadius: 10,
+    borderRadius: radius.md,
     backgroundColor: colors.surface,
   },
   mode: {
     flex: 1,
     alignItems: 'center',
     paddingVertical: spacing.sm,
-    borderRadius: 8,
+    borderRadius: radius.sm,
   },
   activeMode: {
     backgroundColor: colors.background,
   },
   modeLabel: {
-    fontWeight: '600',
+    fontWeight: fontWeights.medium,
     color: colors.textMuted,
   },
   activeModeLabel: {
@@ -204,7 +204,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 12,
     paddingVertical: 10,
-    borderRadius: 10,
+    borderRadius: radius.md,
     borderWidth: 1,
     borderColor: colors.border,
     color: colors.text,
@@ -212,18 +212,18 @@ const styles = StyleSheet.create({
   searchButton: {
     justifyContent: 'center',
     paddingHorizontal: spacing.md,
-    borderRadius: 10,
+    borderRadius: radius.md,
     backgroundColor: colors.primary,
   },
   searchLabel: {
-    fontWeight: '600',
+    fontWeight: fontWeights.medium,
     color: colors.background,
   },
   aiButton: {
     alignItems: 'center',
     marginTop: spacing.md,
     padding: spacing.md,
-    borderRadius: 10,
+    borderRadius: radius.md,
     backgroundColor: colors.primary,
   },
   disabled: {
@@ -237,8 +237,8 @@ const styles = StyleSheet.create({
   },
   heading: {
     marginBottom: spacing.sm,
-    fontSize: 20,
-    fontWeight: '700',
+    fontSize: fontSizes.section,
+    fontWeight: fontWeights.bold,
     color: colors.text,
   },
   empty: {

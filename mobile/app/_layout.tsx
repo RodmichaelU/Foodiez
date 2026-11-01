@@ -35,7 +35,7 @@ function RootNavigator() {
         <Stack.Screen name="recipe/[id]" options={{ title: 'Recipe' }} />
         <Stack.Screen name="made-this" options={{ title: 'I made this' }} />
         <Stack.Screen name="settings" options={{ title: 'Settings' }} />
-        <Stack.Screen name="cooked/[id]" options={{ title: 'Your dish' }} />
+        <Stack.Screen name="cooked/[id]" options={{ title: 'Dish' }} />
       </Stack.Protected>
       <Stack.Protected guard={session === null}>
         <Stack.Screen name="onboarding" options={{ headerShown: false }} />

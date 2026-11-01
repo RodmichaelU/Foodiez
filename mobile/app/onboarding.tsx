@@ -15,7 +15,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { supabase } from '@/src/lib/supabase';
-import { colors, spacing } from '@/src/theme';
+import { colors, fontSizes, fontWeights, radius, spacing } from '@/src/theme';
 
 const SEEN_KEY = 'onboarding-seen';
 const MIN_PASSWORD_LENGTH = 6;
@@ -205,13 +205,13 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary,
   },
   title: {
-    fontSize: 26,
-    fontWeight: '700',
+    fontSize: fontSizes.display,
+    fontWeight: fontWeights.bold,
     textAlign: 'center',
     color: colors.text,
   },
   body: {
-    fontSize: 16,
+    fontSize: fontSizes.body,
     textAlign: 'center',
     color: colors.textMuted,
   },
@@ -224,10 +224,10 @@ const styles = StyleSheet.create({
   input: {
     paddingHorizontal: 14,
     paddingVertical: 14,
-    borderRadius: 10,
+    borderRadius: radius.md,
     borderWidth: 1,
     borderColor: colors.border,
-    fontSize: 16,
+    fontSize: fontSizes.body,
     color: colors.text,
   },
   error: {
@@ -239,11 +239,11 @@ const styles = StyleSheet.create({
   primaryButton: {
     alignItems: 'center',
     paddingVertical: 14,
-    borderRadius: 10,
+    borderRadius: radius.md,
     backgroundColor: colors.primary,
   },
   primaryLabel: {
-    fontWeight: '600',
+    fontWeight: fontWeights.medium,
     color: colors.background,
   },
   disabled: {
@@ -255,6 +255,6 @@ const styles = StyleSheet.create({
   },
   switchLabel: {
     color: colors.primary,
-    fontWeight: '600',
+    fontWeight: fontWeights.medium,
   },
 });
