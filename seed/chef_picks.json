@@ -1,0 +1,69 @@
+[
+  {
+    "external_id": "tomato-egg-skillet",
+    "title": "Tomato and Egg Skillet",
+    "description": "Sample Chef's Pick: eggs poached in a quick garlicky tomato sauce. Replace with your own recipe.",
+    "core_ingredients": ["egg", "tomato", "garlic"],
+    "optional_ingredients": ["onion", "parsley", "cumin"],
+    "ingredient_lines": [
+      { "name": "egg", "amount": "4", "unit": "" },
+      { "name": "tomato", "amount": "4", "unit": "" },
+      { "name": "garlic", "amount": "2", "unit": "cloves" },
+      { "name": "olive oil", "amount": "2", "unit": "tbsp" },
+      { "name": "salt", "amount": "1", "unit": "pinch" }
+    ],
+    "steps": [
+      "Chop the tomatoes and slice the garlic.",
+      "Warm the oil in a skillet over medium heat and cook the garlic for 1 minute.",
+      "Add the tomatoes and salt, then simmer for 10 minutes until saucy.",
+      "Make 4 wells, crack in the eggs, cover, and cook for 5 minutes until the whites set."
+    ],
+    "image_url": null,
+    "prep_minutes": 20
+  },
+  {
+    "external_id": "garlic-butter-chicken-rice",
+    "title": "Garlic Butter Chicken and Rice",
+    "description": "Sample Chef's Pick: a one-pan weeknight dinner. Replace with your own recipe.",
+    "core_ingredients": ["chicken_breast", "rice", "garlic"],
+    "optional_ingredients": ["lemon", "parsley", "broccoli"],
+    "ingredient_lines": [
+      { "name": "chicken breast", "amount": "2", "unit": "" },
+      { "name": "rice", "amount": "1", "unit": "cup" },
+      { "name": "garlic", "amount": "3", "unit": "cloves" },
+      { "name": "butter", "amount": "2", "unit": "tbsp" },
+      { "name": "water", "amount": "2", "unit": "cups" },
+      { "name": "salt", "amount": "1", "unit": "tsp" }
+    ],
+    "steps": [
+      "Cut the chicken into bite-size pieces and season with salt.",
+      "Melt the butter in a deep pan and brown the chicken for 5 minutes.",
+      "Stir in the garlic and rice for 1 minute.",
+      "Add the water, cover, and simmer on low for 18 minutes until the rice is tender."
+    ],
+    "image_url": null,
+    "prep_minutes": 30
+  },
+  {
+    "external_id": "spinach-cheddar-omelette",
+    "title": "Spinach and Cheddar Omelette",
+    "description": "Sample Chef's Pick: a fast, filling breakfast. Replace with your own recipe.",
+    "core_ingredients": ["egg", "spinach", "cheddar"],
+    "optional_ingredients": ["mushroom", "onion"],
+    "ingredient_lines": [
+      { "name": "egg", "amount": "3", "unit": "" },
+      { "name": "spinach", "amount": "1", "unit": "cup" },
+      { "name": "cheddar", "amount": "0.25", "unit": "cup" },
+      { "name": "butter", "amount": "1", "unit": "tbsp" },
+      { "name": "salt", "amount": "1", "unit": "pinch" }
+    ],
+    "steps": [
+      "Beat the eggs with the salt.",
+      "Melt the butter in a nonstick pan and wilt the spinach for 1 minute.",
+      "Pour in the eggs and cook until nearly set.",
+      "Add the cheddar, fold the omelette in half, and serve."
+    ],
+    "image_url": null,
+    "prep_minutes": 10
+  }
+]
