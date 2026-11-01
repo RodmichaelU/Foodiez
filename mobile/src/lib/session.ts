@@ -17,6 +17,7 @@ let draft: Draft | null = null;
 let results: RecipesResponse | null = null;
 let resultsKey: string | null = null;
 let cookedById = new Map<string, CookedItem>();
+let searchedById = new Map<string, Recipe>();
 
 function buildKey(ingredients: string[], useStaples: boolean): string {
   return JSON.stringify([[...ingredients].sort(), useStaples]);
@@ -62,19 +63,37 @@ export function clearResults(): void {
   resultsKey = null;
 }
 
-export function getResultSections(): { title: string; data: Recipe[] }[] {
-  if (!results) return [];
+export function toSections(response: RecipesResponse): { title: string; data: Recipe[] }[] {
   return [
-    { title: "Chef's Picks", data: results.chef_picks },
-    { title: 'From the web', data: results.online },
-    { title: 'AI ideas', data: results.ai },
+    { title: "Chef's Picks", data: response.chef_picks },
+    { title: 'From the web', data: response.online },
+    { title: 'AI ideas', data: response.ai },
   ].filter((section) => section.data.length > 0);
 }
 
-export function getRecipe(id: string): Recipe | undefined {
+export function getResultSections(): { title: string; data: Recipe[] }[] {
+  return results ? toSections(results) : [];
+}
+
+function getScanRecipe(id: string): Recipe | undefined {
   return getResultSections()
     .flatMap((section) => section.data)
     .find((recipe) => recipe.id === id);
+}
+
+export function rememberSearched(response: RecipesResponse): void {
+  toSections(response)
+    .flatMap((section) => section.data)
+    .forEach((recipe) => searchedById.set(recipe.id, recipe));
+}
+
+export function getRecipe(id: string): Recipe | undefined {
+  return getScanRecipe(id) ?? searchedById.get(id);
+}
+
+// A dish cooked from a search result did not come from the current scan.
+export function getScanIdForRecipe(id: string): string | null {
+  return getScanRecipe(id) ? (draft?.scanId ?? null) : null;
 }
 
 export function rememberCooked(items: CookedItem[]): void {
@@ -89,4 +108,5 @@ export function clearSession(): void {
   draft = null;
   clearResults();
   cookedById = new Map();
+  searchedById = new Map();
 }

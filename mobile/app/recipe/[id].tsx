@@ -43,14 +43,20 @@ export default function RecipeScreen() {
       {recipe.prep_minutes ? <Text style={styles.meta}>{recipe.prep_minutes} min</Text> : null}
       {recipe.description ? <Text style={styles.description}>{recipe.description}</Text> : null}
 
-      <IngredientSection
-        title="You have"
-        lines={recipe.ingredient_lines.filter((line) => line.have)}
-      />
-      <IngredientSection
-        title="Missing"
-        lines={recipe.ingredient_lines.filter((line) => !line.have)}
-      />
+      {recipe.match_known ? (
+        <>
+          <IngredientSection
+            title="You have"
+            lines={recipe.ingredient_lines.filter((line) => line.have)}
+          />
+          <IngredientSection
+            title="Missing"
+            lines={recipe.ingredient_lines.filter((line) => !line.have)}
+          />
+        </>
+      ) : (
+        <IngredientSection title="Ingredients" lines={recipe.ingredient_lines} />
+      )}
 
       <RecipeSteps steps={recipe.steps} />
 

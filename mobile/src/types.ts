@@ -38,6 +38,7 @@ export type Recipe = {
   have_count: number;
   total_core: number;
   missing: string[];
+  match_known: boolean;
 };
 
 export type RecipesResponse = {

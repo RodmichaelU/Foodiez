@@ -113,6 +113,17 @@ export function findRecipes(
   });
 }
 
+export type SearchMode = 'name' | 'ingredient';
+
+export function searchRecipes(
+  query: string,
+  mode: SearchMode,
+  useAi = false,
+): Promise<RecipesResponse> {
+  const params = `q=${encodeURIComponent(query)}&mode=${mode}&ai=${useAi}`;
+  return request<RecipesResponse>(`/search?${params}`, { timeoutMs: AI_TIMEOUT_MS });
+}
+
 export function getProfile(): Promise<Profile> {
   return request<Profile>('/profile');
 }

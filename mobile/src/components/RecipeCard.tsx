@@ -33,10 +33,14 @@ export function RecipeCard({ recipe, onPress }: Props) {
         )}
         <Text style={styles.title}>{recipe.title}</Text>
         <Text style={styles.meta}>
-          {recipe.prep_minutes ? `${recipe.prep_minutes} min  ·  ` : ''}
-          You have {recipe.have_count}/{recipe.total_core}
+          {[
+            recipe.prep_minutes ? `${recipe.prep_minutes} min` : null,
+            recipe.match_known ? `You have ${recipe.have_count}/${recipe.total_core}` : null,
+          ]
+            .filter(Boolean)
+            .join('  ·  ')}
         </Text>
-        {recipe.missing.length > 0 && (
+        {recipe.match_known && recipe.missing.length > 0 && (
           <Text style={styles.missing}>
             Missing: {recipe.missing.map(formatIngredient).join(', ')}
           </Text>

@@ -18,7 +18,7 @@ import { createCooked, errorMessage } from '@/src/api/client';
 import { LoadingOverlay } from '@/src/components/LoadingOverlay';
 import { PlaceholderScreen } from '@/src/components/PlaceholderScreen';
 import { compressPhoto } from '@/src/lib/photos';
-import { getDraft, getRecipe } from '@/src/lib/session';
+import { getRecipe, getScanIdForRecipe } from '@/src/lib/session';
 import { colors, spacing } from '@/src/theme';
 
 const MAX_CAPTION_LENGTH = 300;
@@ -65,7 +65,7 @@ export default function MadeThisScreen() {
     try {
       await createCooked({
         recipe,
-        scanId: getDraft()?.scanId ?? null,
+        scanId: getScanIdForRecipe(recipe.id),
         caption,
         isPublic,
         photoUri,
